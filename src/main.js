@@ -33,53 +33,9 @@ const gltfLoader = new GLTFLoader();
 const scene = new THREE.Scene();
 
 /**
- * Material
+ * Textures
  */
-const texture = textureLoader.load('circle.png');
-
-const material = new THREE.MeshBasicMaterial({
-	color: 0x0000ff,
-	wireframe: true,
-});
-
-// const oldGeometry = new THREE.BoxGeometry(1, 1, 1, 10, 10, 10);
-// const oldPositionAttr = oldGeometry.attributes.position;
-// const newBufferGeometry = new THREE.BufferGeometry();
-// newBufferGeometry.setAttribute('position', oldPositionAttr);
-// const newParticles = new THREE.Points(
-// 	newBufferGeometry,
-// 	new THREE.PointsMaterial({ size: 0.1, alphaMap: texture, transparent: true })
-// );
-// scene.add(newParticles);
-
-const obj = new THREE.Points(
-	new THREE.BoxGeometry(1, 1, 1, 10, 10, 10),
-	new THREE.PointsMaterial({
-		size: 0.05,
-		alphaMap: texture,
-		transparent: true,
-	})
-);
-// scene.add(obj);
-
-// scene.add(new THREE.AxesHelper());
-
-/**
- * Particles
- */
-// const count = 100;
-// const positions = new Float32Array(count * 3);
-// for (let i = 0; i < positions.length; i++) {
-// 	positions[i] = (Math.random() - 0.5) * 2;
-// }
-
-// const geometry = new THREE.BufferGeometry();
-// geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-// const particles = new THREE.Points(
-// 	geometry,
-// 	new THREE.PointsMaterial({ size: 0.1, alphaMap: texture, transparent: true })
-// );
-// scene.add(particles);
+const texture = textureLoader.load('fire_01.png');
 
 /**
  * FBX
@@ -89,33 +45,36 @@ gltfLoader.load(
 	'agro.glb',
 	gltf => {
 		model = gltf.scene.children[0];
-		gltf.scene.traverse(child => {
-			if (child.isMesh) {
-				child.material = material;
-			}
-		});
-		// scene.add(gltf.scene);
+
 		const oldGeometryPositionAttr = model.geometry.attributes.position;
+		const scales = new Float32Array(oldGeometryPositionAttr.count);
+
+		for (let i = 0; i < scales.length; i++) {
+			scales[i] = (Math.random() + 0.1) * 1.5;
+		}
+
 		const newGeometry = new THREE.BufferGeometry();
 		newGeometry.setAttribute('position', oldGeometryPositionAttr);
+		newGeometry.setAttribute('aScales', new THREE.BufferAttribute(scales, 1));
 
 		particlesMaterial = new THREE.ShaderMaterial({
 			vertexShader: agroVertexShader,
 			fragmentShader: agroFragmentShader,
 			uniforms: {
-				uSize: { value: 25 },
+				uSize: { value: 50 },
 				uPixelRatio: {
 					value: Math.min(devicePixelRatio, 2),
 				},
 				uTexture: { value: texture },
+				uAlphaMap: { value: texture },
 
 				uScroll: { value: 0 },
 				uTime: { value: 0 },
 			},
+			transparent: true,
+			depthWrite: false,
 		});
 
-		const initialPosition = model.geometry.attributes.position;
-		newGeometry.setAttribute('aInitialPosition', initialPosition);
 		const particles = new THREE.Points(newGeometry, particlesMaterial);
 		particles.rotation.x = Math.PI / 2;
 		scene.add(particles);
@@ -157,6 +116,20 @@ renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 10));
 
 /**
+ * Resize
+ */
+window.addEventListener('resize', e => {
+	sizes.width = window.innerWidth;
+	sizes.height = window.innerHeight;
+
+	camera.aspect = sizes.width / sizes.height;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize(sizes.width, sizes.height);
+	renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+});
+
+/**
  * Tick
  */
 let scrollVal = 0;
@@ -183,8 +156,35 @@ const tick = () => {
 
 tick();
 
-addEventListener('wheel', e => {
-	console.log(e);
+/**
+ * Audio
+ */
+const audio = new Audio('rise.wav');
+audio.volume = 0.3;
+
+let audioPlaying = false;
+document.addEventListener('wheel', e => {
+	// Update scroll value immediately
 	scrollVal += e.deltaY * 0.005;
-	console.log(scrollVal);
+
+	if (!audioPlaying) {
+		audio
+			.play()
+			.then(() => {
+				audioPlaying = true;
+			})
+			.finally(() => {
+				audioPlaying = false;
+			});
+	}
+});
+
+/**
+ * Modal
+ */
+const modalBtn = document.querySelector('.modal__button');
+const modal = document.querySelector('.modal');
+modalBtn.addEventListener('click', () => {
+	canvas.classList.remove('blurred');
+	modal.style.transform = 'scale(0)';
 });

@@ -4,6 +4,8 @@ uniform float uPixelRatio;
 uniform float uScroll;
 uniform float uTime;
 
+attribute float aScales;
+
 void main() {
     vec4 modelPosition = modelMatrix * vec4(position, 1.0);
 
@@ -18,7 +20,7 @@ void main() {
     // // Add an animated size pulsation
     // float pulsation = abs(sin(uTime * 1.0)); // Adjust the speed of pulsation
     // gl_PointSize = uSize * uPixelRatio * pulsation;
-    gl_PointSize = uSize * uPixelRatio;
+    gl_PointSize = uSize * uPixelRatio * aScales;
 
     gl_PointSize *= (1.0 / -viewPosition.z);
 }

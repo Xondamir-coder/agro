@@ -1,6 +1,6 @@
-uniform sampler2D uTexture;
+uniform sampler2D uAlphaMap;
 
 void main() {
-    vec4 textureColor = texture2D(uTexture, gl_PointCoord);
-    gl_FragColor = textureColor;
+    float alphaValue = texture2D(uAlphaMap, gl_PointCoord).r;
+    gl_FragColor = vec4(1.0, 1.0, 1.0, alphaValue);
 }
