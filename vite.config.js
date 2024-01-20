@@ -5,6 +5,9 @@ export default defineConfig({
 	root: 'src',
 	publicDir: '../public',
 	base: './',
+	build: {
+		outDir: '../dist',
+	},
 	plugins: [glsl()],
 	server: {
 		open: true,
