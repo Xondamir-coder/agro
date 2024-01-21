@@ -84,12 +84,29 @@ const gui = new GUI();
 const scene = new THREE.Scene();
 
 /**
+ * Overlay
+ */
+const overlay = new THREE.Mesh(
+	new THREE.PlaneGeometry(2, 2),
+	new THREE.ShaderMaterial({
+		vertexShader: overlayVertexShader,
+		fragmentShader: overlayFragmentShader,
+		uniforms: {
+			uAlpha: { value: 1 },
+		},
+		transparent: true,
+	})
+);
+scene.add(overlay);
+
+gsap.to(overlay.material.uniforms.uAlpha, { value: 0, duration: 0.5, delay: 1 });
+
+/**
  * FBX
  */
 let model, particlesMaterial, particlesGeometry, particles;
 const generateParticles = () => {
 	if (particlesGeometry && particlesMaterial) {
-		console.log('asd');
 		particlesGeometry.dispose();
 		particlesMaterial.dispose();
 		scene.remove(particles);
@@ -194,24 +211,6 @@ const generateGUI = material => {
 			generateParticles();
 		});
 };
-
-/**
- * Overlay
- */
-const overlay = new THREE.Mesh(
-	new THREE.PlaneGeometry(2, 2),
-	new THREE.ShaderMaterial({
-		vertexShader: overlayVertexShader,
-		fragmentShader: overlayFragmentShader,
-		uniforms: {
-			uAlpha: { value: 1 },
-		},
-		transparent: true,
-	})
-);
-scene.add(overlay);
-
-gsap.to(overlay.material.uniforms.uAlpha, { value: 0, duration: 0.5, delay: 1 });
 
 /**
  * Lights
