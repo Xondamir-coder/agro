@@ -3,6 +3,7 @@ import { GLTFLoader, OrbitControls } from 'three/examples/jsm/Addons';
 import GUI from 'lil-gui';
 import gsap from 'gsap';
 import './style.css';
+import Dom from './Dom/Dom';
 import agroVertexShader from './shaders/agro/vertex.glsl';
 import agroFragmentShader from './shaders/agro/fragment.glsl';
 import overlayVertexShader from './shaders/overlay/vertex.glsl';
@@ -84,6 +85,17 @@ const gui = new GUI();
 const scene = new THREE.Scene();
 
 /**
+ * Clean-up
+ */
+const cleanUpResources = (mesh, ...resources) => {
+	resources.forEach(resource => {
+		resource.dispose && resource.dispose();
+		resource.destroy && resource.destroy();
+	});
+	mesh && scene.remove(mesh);
+};
+
+/**
  * Overlay
  */
 const overlay = new THREE.Mesh(
@@ -99,18 +111,17 @@ const overlay = new THREE.Mesh(
 );
 scene.add(overlay);
 
-gsap.to(overlay.material.uniforms.uAlpha, { value: 0, duration: 0.5, delay: 1 });
+gsap.to(overlay.material.uniforms.uAlpha, { value: 0, duration: 0.5, delay: 1 }).then(
+	cleanUpResources(overlay, overlay.geometry, overlay.material)
+);
 
 /**
  * FBX
  */
 let model, particlesMaterial, particlesGeometry, particles;
 const generateParticles = () => {
-	if (particlesGeometry && particlesMaterial) {
-		particlesGeometry.dispose();
-		particlesMaterial.dispose();
-		scene.remove(particles);
-	}
+	if (particlesGeometry && particlesMaterial)
+		cleanUpResources(particles, particlesGeometry, particlesMaterial);
 
 	// Copy the positions to create a bufferGeometry
 	const oldGeometryPositionAttr = model.geometry.attributes.position;
@@ -141,6 +152,7 @@ const generateParticles = () => {
 		transparent: true,
 		depthWrite: false,
 		blending: THREE.AdditiveBlending,
+		side: THREE.DoubleSide,
 	});
 
 	// Particles
@@ -169,10 +181,9 @@ gltfLoader.load(
 
 let particleFolder, particleTexturesFolder;
 const generateGUI = material => {
-	if (particleFolder && particleTexturesFolder) {
-		particleFolder.destroy();
-		particleTexturesFolder.destroy();
-	}
+	if (particleFolder && particleTexturesFolder)
+		cleanUpResources(null, particleFolder, particleTexturesFolder);
+
 	particleFolder = gui.addFolder('particles');
 	particleFolder.add(material.uniforms.uSize, 'value').min(0).max(300).name('size');
 	particleFolder
@@ -238,7 +249,7 @@ controls.enablePan = false;
  */
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setSize(sizes.width, sizes.height);
-renderer.setPixelRatio(Math.min(devicePixelRatio, 10));
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
 /**
  * Resize
@@ -257,56 +268,19 @@ window.addEventListener('resize', e => {
 /**
  * Tick
  */
-let scrollVal = 0;
+const dom = new Dom();
 const clock = new THREE.Clock();
 
 const tick = () => {
 	const elapsedTime = clock.getElapsedTime();
-
 	renderer.render(scene, camera);
-
 	controls.update();
-
 	if (particlesMaterial) {
-		gsap.to(debugObj, { scroll: scrollVal, duration: 3 });
+		gsap.to(debugObj, { scroll: dom.scrollVal, duration: 3 });
 		particlesMaterial.uniforms.uScroll.value = debugObj.scroll;
 		particlesMaterial.uniforms.uTime.value = elapsedTime;
 	}
-
 	requestAnimationFrame(tick);
 };
 
 tick();
-
-/**
- * Audio
- */
-const audio = new Audio('rise.wav');
-audio.volume = 0.3;
-
-let audioPlaying = false;
-document.addEventListener('wheel', e => {
-	// Update scroll value immediately
-	scrollVal += e.deltaY * 0.005;
-
-	if (!audioPlaying) {
-		audio
-			.play()
-			.then(() => {
-				audioPlaying = true;
-			})
-			.finally(() => {
-				audioPlaying = false;
-			});
-	}
-});
-
-/**
- * Modal
- */
-const modalBtn = document.querySelector('.modal__button');
-const modal = document.querySelector('.modal');
-modalBtn.addEventListener('click', () => {
-	canvas.classList.remove('blurred');
-	modal.style.transform = 'scale(0)';
-});
