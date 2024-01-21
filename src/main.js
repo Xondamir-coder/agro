@@ -3,8 +3,10 @@ import { GLTFLoader, OrbitControls } from 'three/examples/jsm/Addons';
 import GUI from 'lil-gui';
 import gsap from 'gsap';
 import './style.css';
-import agroVertexShader from './shaders/vertex.glsl';
-import agroFragmentShader from './shaders/fragment.glsl';
+import agroVertexShader from './shaders/agro/vertex.glsl';
+import agroFragmentShader from './shaders/agro/fragment.glsl';
+import overlayVertexShader from './shaders/overlay/vertex.glsl';
+import overlayFragmentShader from './shaders/overlay/fragment.glsl';
 
 const canvas = document.querySelector('.canvas');
 
@@ -25,24 +27,24 @@ const gltfLoader = new GLTFLoader();
 /**
  * Textures
  */
-const circle_01Texture = textureLoader.load('circle_01.png');
-const dirt_01Texture = textureLoader.load('dirt_01.png');
-const fire_01Texture = textureLoader.load('fire_01.png');
-const flame_01Texture = textureLoader.load('flame_01.png');
-const flare_01Texture = textureLoader.load('flare_01.png');
-const light_01Texture = textureLoader.load('light_01.png');
-const magic_01Texture = textureLoader.load('magic_01.png');
-const muzzle_01Texture = textureLoader.load('muzzle_01.png');
-const scorch_01Texture = textureLoader.load('scorch_01.png');
-const scratch_01Texture = textureLoader.load('scratch_01.png');
-const slash_01Texture = textureLoader.load('slash_01.png');
-const smoke_01Texture = textureLoader.load('smoke_01.png');
-const spark_01Texture = textureLoader.load('spark_01.png');
-const star_01Texture = textureLoader.load('star_01.png');
-const symbol_01Texture = textureLoader.load('symbol_01.png');
-const trace_01Texture = textureLoader.load('trace_01.png');
-const twirl_01Texture = textureLoader.load('twirl_01.png');
-const window_01Texture = textureLoader.load('window_01.png');
+const circle_01Texture = textureLoader.load('textures/circle_01.png');
+const dirt_01Texture = textureLoader.load('textures/dirt_01.png');
+const fire_01Texture = textureLoader.load('textures/fire_01.png');
+const flame_01Texture = textureLoader.load('textures/flame_01.png');
+const flare_01Texture = textureLoader.load('textures/flare_01.png');
+const light_01Texture = textureLoader.load('textures/light_01.png');
+const magic_01Texture = textureLoader.load('textures/magic_01.png');
+const muzzle_01Texture = textureLoader.load('textures/muzzle_01.png');
+const scorch_01Texture = textureLoader.load('textures/scorch_01.png');
+const scratch_01Texture = textureLoader.load('textures/scratch_01.png');
+const slash_01Texture = textureLoader.load('textures/slash_01.png');
+const smoke_01Texture = textureLoader.load('textures/smoke_01.png');
+const spark_01Texture = textureLoader.load('textures/spark_01.png');
+const star_01Texture = textureLoader.load('textures/star_01.png');
+const symbol_01Texture = textureLoader.load('textures/symbol_01.png');
+const trace_01Texture = textureLoader.load('textures/trace_01.png');
+const twirl_01Texture = textureLoader.load('textures/twirl_01.png');
+const window_01Texture = textureLoader.load('textures/window_01.png');
 
 const texturesMap = new Map([
 	['circle', circle_01Texture],
@@ -192,6 +194,24 @@ const generateGUI = material => {
 			generateParticles();
 		});
 };
+
+/**
+ * Overlay
+ */
+const overlay = new THREE.Mesh(
+	new THREE.PlaneGeometry(2, 2),
+	new THREE.ShaderMaterial({
+		vertexShader: overlayVertexShader,
+		fragmentShader: overlayFragmentShader,
+		uniforms: {
+			uAlpha: { value: 1 },
+		},
+		transparent: true,
+	})
+);
+scene.add(overlay);
+
+gsap.to(overlay.material.uniforms.uAlpha, { value: 0, duration: 0.5, delay: 1 });
 
 /**
  * Lights
