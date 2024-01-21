@@ -111,9 +111,9 @@ const overlay = new THREE.Mesh(
 );
 scene.add(overlay);
 
-gsap.to(overlay.material.uniforms.uAlpha, { value: 0, duration: 0.5, delay: 1 }).then(
-	cleanUpResources(overlay, overlay.geometry, overlay.material)
-);
+gsap.to(overlay.material.uniforms.uAlpha, { value: 0, duration: 0.5, delay: 1 }).then(() => {
+	cleanUpResources(overlay, overlay.geometry, overlay.material);
+});
 
 /**
  * FBX

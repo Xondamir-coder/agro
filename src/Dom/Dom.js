@@ -10,7 +10,7 @@ export default class Dom {
 	constructor() {
 		this.audio.volume = 0.3;
 		document.addEventListener('wheel', this.#handleWheel.bind(this));
-		modalBtn.addEventListener('click', this.#handleModalClick.bind(this));
+		modalBtn.addEventListener('click', this.#handleModalBtnClick.bind(this));
 	}
 	#handleWheel(e) {
 		this.scrollVal += e.deltaY * 0.005;
@@ -25,7 +25,7 @@ export default class Dom {
 				});
 		}
 	}
-	#handleModalClick() {
+	#handleModalBtnClick() {
 		canvas.classList.remove('blurred');
 		modal.style.transform = 'scale(0)';
 	}
