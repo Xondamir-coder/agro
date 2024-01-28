@@ -1,11 +1,13 @@
 const modalBtn = document.querySelector('.modal__button');
 const modal = document.querySelector('.modal');
 const canvas = document.querySelector('.canvas');
+import audioUrl from '../assets/rise.wav';
 
 export default class Dom {
 	audioPlaying = false;
 	scrollVal = 0;
-	audio = new Audio('rise.wav');
+	audio = new Audio(audioUrl);
+	animationEnded = false;
 
 	constructor() {
 		this.audio.volume = 0.3;
@@ -13,7 +15,7 @@ export default class Dom {
 		modalBtn.addEventListener('click', this.#handleModalBtnClick.bind(this));
 	}
 	#handleWheel(e) {
-		this.scrollVal += e.deltaY * 0.005;
+		this.#increaseScroll(e);
 		if (!this.audioPlaying) {
 			this.audio
 				.play()
@@ -28,5 +30,14 @@ export default class Dom {
 	#handleModalBtnClick() {
 		canvas.classList.remove('blurred');
 		modal.style.transform = 'scale(0)';
+	}
+	#increaseScroll(e) {
+		if (this.scrollVal >= 62.5) {
+			setTimeout(() => {
+				!this.animationEnded && (this.animationEnded = true);
+			}, 3000);
+			return;
+		}
+		this.scrollVal += e.deltaY * 0.005;
 	}
 }
