@@ -19,7 +19,7 @@ export default class Dom {
 	}
 	#handleWheel(e) {
 		this.#increaseScroll(e);
-		if (!this.audioPlaying) {
+		if (!this.audioPlaying && !this.animationEnded) {
 			this.audio
 				.play()
 				.then(() => {
