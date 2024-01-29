@@ -36,6 +36,26 @@ export default class Three {
 		width: window.innerWidth,
 		height: window.innerHeight,
 	};
+	textureOptions = [
+		'circle',
+		'dirt',
+		'fire',
+		'flame',
+		'flare',
+		'light',
+		'magic',
+		'muzzle',
+		'scorch',
+		'scratch',
+		'slash',
+		'spark',
+		'star',
+		'symbol',
+		'trace',
+		'twirl',
+		'window',
+		'smoke',
+	];
 
 	// Three.js objs
 	canvas = document.querySelector('.canvas');
@@ -56,6 +76,7 @@ export default class Three {
 
 		this.#tick();
 		window.addEventListener('resize', this.#handleResize.bind(this));
+		window.addEventListener('keyup', this.#handleKeyup.bind(this));
 	}
 	#setCamera() {
 		this.camera = new THREE.PerspectiveCamera(
@@ -73,26 +94,30 @@ export default class Three {
 	}
 	#loadTextures() {
 		this.#setLoaders();
-
+		const textureUrls = {
+			smoke: smokeUrl,
+			circle: circleUrl,
+			dirt: dirtUrl,
+			fire: fireUrl,
+			flame: flameUrl,
+			flare: flareUrl,
+			light: lightUrl,
+			magic: magicUrl,
+			muzzle: muzzleUrl,
+			scorch: scorchUrl,
+			scratch: scratchUrl,
+			slash: slashUrl,
+			spark: sparkUrl,
+			star: starUrl,
+			symbol: symbolUrl,
+			trace: traceUrl,
+			twirl: twirlUrl,
+			window: windowUrl,
+		};
 		this.textures = {};
-		this.textures.smoke = this.loaders.textureLoader.load(smokeUrl);
-		this.textures.circle = this.loaders.textureLoader.load(circleUrl);
-		this.textures.dirt = this.loaders.textureLoader.load(dirtUrl);
-		this.textures.fire = this.loaders.textureLoader.load(fireUrl);
-		this.textures.flame = this.loaders.textureLoader.load(flameUrl);
-		this.textures.flare = this.loaders.textureLoader.load(flareUrl);
-		this.textures.light = this.loaders.textureLoader.load(lightUrl);
-		this.textures.magic = this.loaders.textureLoader.load(magicUrl);
-		this.textures.muzzle = this.loaders.textureLoader.load(muzzleUrl);
-		this.textures.scorch = this.loaders.textureLoader.load(scorchUrl);
-		this.textures.scratch = this.loaders.textureLoader.load(scratchUrl);
-		this.textures.slash = this.loaders.textureLoader.load(slashUrl);
-		this.textures.spark = this.loaders.textureLoader.load(sparkUrl);
-		this.textures.star = this.loaders.textureLoader.load(starUrl);
-		this.textures.symbol = this.loaders.textureLoader.load(symbolUrl);
-		this.textures.trace = this.loaders.textureLoader.load(traceUrl);
-		this.textures.twirl = this.loaders.textureLoader.load(twirlUrl);
-		this.textures.window = this.loaders.textureLoader.load(windowUrl);
+		Object.entries(textureUrls).forEach(
+			([name, url]) => (this.textures[name] = this.loaders.textureLoader.load(url))
+		);
 	}
 	#setGUI() {
 		this.debugObj = {
@@ -102,6 +127,7 @@ export default class Three {
 			particleTextureName: 'smoke',
 		};
 		this.gui = new GUI();
+		this.gui.hide();
 		this.folder = {};
 	}
 	#setOverlay() {
@@ -198,26 +224,7 @@ export default class Three {
 		this.folder.textures = this.gui.addFolder('textures');
 		this.folder.textures
 			.add(this.debugObj, 'particleTextureName')
-			.options([
-				'circle',
-				'dirt',
-				'fire',
-				'flame',
-				'flare',
-				'light',
-				'magic',
-				'muzzle',
-				'scorch',
-				'scratch',
-				'slash',
-				'spark',
-				'star',
-				'symbol',
-				'trace',
-				'twirl',
-				'window',
-				'smoke',
-			])
+			.options(this.textureOptions)
 			.name('names')
 			.onChange(() => {
 				this.debugObj.particleTexture = this.textures[this.debugObj.particleTextureName];
@@ -253,17 +260,37 @@ export default class Three {
 		this.renderer.setSize(this.sizes.width, this.sizes.height);
 		this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 	}
+	#handleKeyup(e) {
+		if (e.key === 'h') this.gui._hidden ? this.gui.show() : this.gui.hide();
+	}
 	#tick() {
 		const elapsedTime = this.clock.getElapsedTime();
+
+		// If animation has ended don't render
+		if (this.dom.animationEnded) {
+			this.canvas.classList.add('transparent');
+			setTimeout(this.#removeCanvas.bind(this), 1000);
+			return;
+		}
+
 		this.renderer.render(this.scene, this.camera);
 		this.controls.update();
 		if (this.particles?.material) {
 			gsap.to(this.debugObj, { scroll: this.dom.scrollVal, duration: 3 });
 			this.particles.material.uniforms.uScroll.value = this.debugObj.scroll;
 			this.particles.material.uniforms.uTime.value = elapsedTime;
-			this.dom.animationEnded &&
-				gsap.to(this.particles.material.uniforms.uAlpha, { value: 0, duration: 0.3 });
 		}
 		requestAnimationFrame(this.#tick.bind(this));
+	}
+	#removeCanvas() {
+		this.scene.traverse(child => {
+			console.log(child);
+			child.geometry && child.geometry.dispose();
+			child.material && child.material.dispose();
+			this.scene.remove(child);
+		});
+		this.canvas.classList.add('hidden');
+		const content = document.querySelector('.content');
+		content.classList.remove('transparent');
 	}
 }

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="99" height="107" viewBox="0 0 99 107" fill="none">
+  <g filter="url(#filter0_b_25_47)">
+    <path d="M0 56.7339C0 29.3958 22.1619 7.23389 49.5 7.23389C76.8381 7.23389 99 29.3958 99 56.7339C99 84.072 76.8381 106.234 49.5 106.234C22.1619 106.234 0 84.072 0 56.7339Z" fill="url(#paint0_radial_25_47)"/>
+    <path d="M0.5 56.7339C0.5 29.6719 22.438 7.73389 49.5 7.73389C76.5619 7.73389 98.5 29.6719 98.5 56.7339C98.5 83.7958 76.5619 105.734 49.5 105.734C22.438 105.734 0.5 83.7958 0.5 56.7339Z" stroke="url(#paint1_radial_25_47)"/>
+    <path d="M0.5 56.7339C0.5 29.6719 22.438 7.73389 49.5 7.73389C76.5619 7.73389 98.5 29.6719 98.5 56.7339C98.5 83.7958 76.5619 105.734 49.5 105.734C22.438 105.734 0.5 83.7958 0.5 56.7339Z" stroke="url(#paint2_radial_25_47)"/>
+    <path d="M0.5 56.7339C0.5 29.6719 22.438 7.73389 49.5 7.73389C76.5619 7.73389 98.5 29.6719 98.5 56.7339C98.5 83.7958 76.5619 105.734 49.5 105.734C22.438 105.734 0.5 83.7958 0.5 56.7339Z" stroke="url(#paint3_radial_25_47)"/>
+  </g>
+  <g filter="url(#filter1_f_25_47)">
+    <ellipse cx="49.1827" cy="33.8878" rx="31.4135" ry="20.3077" fill="url(#paint4_radial_25_47)" fill-opacity="0.2"/>
+  </g>
+  <defs>
+    <filter id="filter0_b_25_47" x="-10" y="-2.76611" width="119" height="119" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feGaussianBlur in="BackgroundImageFix" stdDeviation="5"/>
+      <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_25_47"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_25_47" result="shape"/>
+    </filter>
+    <filter id="filter1_f_25_47" x="4.81475" y="0.625555" width="88.736" height="66.5245" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="6.47727" result="effect1_foregroundBlur_25_47"/>
+    </filter>
+    <radialGradient id="paint0_radial_25_47" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(8.2814 7.23389) rotate(48.0195) scale(148.009 107.51)">
+      <stop stop-color="white" stop-opacity="0.36"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="paint1_radial_25_47" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(-52.7132 17.3618) rotate(35.1112) scale(114.136 67.4235)">
+      <stop stop-color="white"/>
+      <stop offset="1" stop-color="white" stop-opacity="0.06"/>
+    </radialGradient>
+    <radialGradient id="paint2_radial_25_47" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(127.983 73.4906) rotate(161.34) scale(82.7401 56.0399)">
+      <stop stop-color="#8470FF"/>
+      <stop offset="1" stop-color="#865CFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="paint3_radial_25_47" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(50.5779 -15.3922) rotate(47.2897) scale(55.3238 39.7567)">
+      <stop/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="paint4_radial_25_47" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(49.1827 13.5801) rotate(90) scale(30.0963 46.5609)">
+      <stop stop-color="white"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>

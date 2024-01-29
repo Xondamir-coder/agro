@@ -1,3 +1,15 @@
+/* Include fonts */
+@font-face {
+	font-family: 'ALS Agrofont';
+	src: url('./assets/fonts/ALSAgrofont-Regular.ttf');
+	font-weight: 400;
+}
+@font-face {
+	font-family: 'ALS Agrofont';
+	src: url('./assets/fonts/ALSAgrofont-Bold.ttf');
+	font-weight: 700;
+}
+
 *,
 *::before,
 *::after {
@@ -5,14 +17,103 @@
 	padding: 0;
 	box-sizing: border-box;
 }
-body {
-	overflow: hidden;
-	display: grid;
-	place-items: center;
-	height: 100vh;
+
+.canvas {
+	transition: opacity 1s;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1;
 }
-.modal {
+#app {
+	background-color: #000000;
+	height: 100vh;
+	font-family: 'ALS Agrofont', sans-serif;
+}
+
+/* Content */
+.content {
+	transition: opacity 1s 0.5s;
+	position: relative;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 120px;
+}
+.content__glass--big {
 	position: absolute;
+	top: 13%;
+	left: 22%;
+}
+.content__glass--small {
+	position: absolute;
+	top: 32%;
+	right: 22%;
+}
+.content__text {
+	width: 70%;
+}
+.content__text p {
+	color: #fff;
+	text-align: center;
+	font-size: 18px;
+	font-style: normal;
+	line-height: 130%;
+	letter-spacing: 8px;
+	text-transform: uppercase;
+}
+.content__text h1 {
+	color: #fff;
+	text-align: center;
+	font-size: 60px;
+	font-weight: 700;
+	line-height: 130%;
+	letter-spacing: 8px;
+}
+.content__logo {
+	position: absolute;
+	top: 10%;
+	/* top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%); */
+}
+.content__logo img:last-child {
+	width: auto;
+	margin-left: 10px;
+	transition: width 0.5s;
+}
+.content__button {
+	cursor: pointer;
+	display: inline-flex;
+	padding: 18px;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	color: #fff;
+	text-align: center;
+	font-size: 18px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 100%; /* 18px */
+	border-radius: 4px;
+	border: 1px solid #fff;
+	background: radial-gradient(
+		117.73% 149.5% at 8.37% 0%,
+		rgba(255, 255, 255, 0.22) 0%,
+		rgba(255, 255, 255, 0) 100%
+	);
+	backdrop-filter: blur(5px);
+}
+
+/* Modal */
+.modal {
+	z-index: 2;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	translate: -50% -50%;
 	background-color: #fff;
 	width: 300px;
 	padding: 20px;
@@ -25,7 +126,6 @@ body {
 	animation: scaleAnimation 0.5s;
 	transition: transform 0.5s;
 }
-
 .modal__text {
 	font-style: italic;
 	font-family: 'Google Sans', Roboto, Arial, sans-serif;
@@ -68,45 +168,46 @@ body {
 	will-change: transform, opacity;
 	z-index: 0;
 }
-
 .modal__button:hover {
 	background: #f6f9fe;
 	color: #174ea6;
 }
-
 .modal__button:active {
 	box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
 	outline: none;
 }
-
 .modal__button:focus {
 	outline: none;
 	border: 2px solid #4285f4;
 }
-
 .modal__button:not(:disabled) {
 	box-shadow: rgba(60, 64, 67, 0.3) 0 1px 3px 0, rgba(60, 64, 67, 0.15) 0 4px 8px 3px;
 }
-
 .modal__button:not(:disabled):hover {
 	box-shadow: rgba(60, 64, 67, 0.3) 0 2px 3px 0, rgba(60, 64, 67, 0.15) 0 6px 10px 4px;
 }
-
 .modal__button:not(:disabled):focus {
 	box-shadow: rgba(60, 64, 67, 0.3) 0 1px 3px 0, rgba(60, 64, 67, 0.15) 0 4px 8px 3px;
 }
-
 .modal__button:not(:disabled):active {
 	box-shadow: rgba(60, 64, 67, 0.3) 0 4px 4px 0, rgba(60, 64, 67, 0.15) 0 8px 12px 6px;
 }
-
 .modal__button:disabled {
 	box-shadow: rgba(60, 64, 67, 0.3) 0 1px 3px 0, rgba(60, 64, 67, 0.15) 0 4px 8px 3px;
 }
+
+/* Helper classes */
 .blurred {
 	filter: blur(4px);
 }
+.transparent {
+	opacity: 0;
+}
+.hidden {
+	display: none;
+}
 
+/* Animations */
 @keyframes scaleAnimation {
 	0% {
 		transform: scale(0.5);

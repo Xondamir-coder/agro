@@ -20,7 +20,10 @@ import twirlUrl from './textures/twirl_01.png';
 import windowUrl from './textures/window_01.png';
 
 export {
+	// Model
 	agroModelUrl,
+
+	// Textures for particles
 	circleUrl,
 	dirtUrl,
 	fireUrl,
