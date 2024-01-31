@@ -284,7 +284,6 @@ export default class Three {
 	}
 	#removeCanvas() {
 		this.scene.traverse(child => {
-			console.log(child);
 			child.geometry && child.geometry.dispose();
 			child.material && child.material.dispose();
 			this.scene.remove(child);

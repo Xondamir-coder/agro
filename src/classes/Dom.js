@@ -45,12 +45,13 @@ export default class Dom {
 		});
 	}
 	#increaseScroll(e) {
-		if (this.scrollVal >= 62.5) {
+		if (this.scrollVal >= 62.5 || this.scrollVal <= -63) {
 			setTimeout(() => {
 				!this.animationEnded && (this.animationEnded = true);
 			}, 4000);
 			return;
 		}
 		this.scrollVal += e.deltaY * 0.005;
+		console.log(this.scrollVal);
 	}
 }
